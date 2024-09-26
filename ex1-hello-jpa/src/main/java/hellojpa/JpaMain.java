@@ -21,15 +21,13 @@ public class JpaMain {
         /* code 작성 */
         try {
             /* 영속 상태 */
-            Member member1 = new Member(150L, "A");
-            Member member2 = new Member(160L, "B");
+            Member member = new Member(200L, "member200");
+            em.persist(member);
 
-            em.persist(member1);
-            em.persist(member2);
+            em.flush(); // DB에 바로 반영
+
             System.out.println("====================================");
-
-            /* 트랜잭션 커밋 시점에 실제 DB에 insert 쿼리가 실행됨 */
-            tx.commit(); // DB에 SQL 쿼리가 실행되고, 트랜잭션이 커밋됨
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
         } finally {
