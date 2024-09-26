@@ -20,21 +20,19 @@ public class JpaMain {
 
         /* code 작성 */
         try {
-            /* JPA 사용 */
-//            Member findMember = em.find(Member.class, 1L);
-//            findMember.setName("HelloJPA");
+            /* 비영속 상태: 아직 엔티티가 영속성 컨텍스트에 관리되지 않음 */
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            /* JPQL 사용 */
-            List<Member> result = em.createQuery("select m from Member m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(8)
-                    .getResultList();
+            /* 영속 상태: 영속성 컨텍스트에 엔티티가 저장됨, 하지만 아직 DB에 저장되지 않음 */
+            System.out.println("=== BEFORE ===");
+            em.persist(member); // 영속성 컨텍스트에 member를 저장
+            /*em.detach(member); // 영속성 컨텍스트에서 member를 삭제*/
+            System.out.println("=== AFTER ===");
 
-            for (Member member : result) {
-                System.out.println("member.name = " + member.getName());
-            }
-
-            tx.commit();
+            /* 트랜잭션 커밋 시점에 실제 DB에 insert 쿼리가 실행됨 */
+            tx.commit(); // DB에 SQL 쿼리가 실행되고, 트랜잭션이 커밋됨
         } catch (Exception e) {
             tx.rollback();
         } finally {
