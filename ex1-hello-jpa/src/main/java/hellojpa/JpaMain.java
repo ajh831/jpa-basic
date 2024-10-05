@@ -21,10 +21,14 @@ public class JpaMain {
         /* code 작성 */
         try {
             /* 영속 상태 */
-            Member member = new Member(200L, "member200");
-            em.persist(member);
+            Member member = em.find(Member.class, 150L);
+            member.setName("AAAAA");
 
-            em.flush(); // DB에 바로 반영
+//            em.detach(member); // 영속성 컨텍스트에서 분리시켜 준영속 상태로 만듦
+//            em.clear(); // EntityManager 내부의 영속성 컨텍스트를 완전히 초기화
+            em.close(); // 영속성 컨텍스트를 종료하여 EntityManager 사용 불가능
+
+            Member member2 = em.find(Member.class, 150L);
 
             System.out.println("====================================");
             tx.commit();
