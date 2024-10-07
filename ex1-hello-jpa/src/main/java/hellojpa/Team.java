@@ -14,7 +14,8 @@ public class Team {
 
     private String name;
 
-    @OneToMany(mappedBy = "team") // mappedBy는 반대편에 어떤게 걸려있는지 정해주는 것
+    @OneToMany
+    @JoinColumn(name = "TEAM_ID") // 일대다
     private List<Member> members = new ArrayList<>();
 
     public Long getId() {

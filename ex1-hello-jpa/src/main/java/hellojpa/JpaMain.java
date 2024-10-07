@@ -40,29 +40,18 @@ public class JpaMain {
             Team findTeam = em.find(Team.class, findTeamId);
 */
             // 저장
+            Member member = new Member();
+            member.setName("Member1");
+
+            em.persist(member);
+
             Team team = new Team();
             team.setName("TeamA");
 
+            // 외래키가 TEAM 테이블에 있는 것이 아닌 MEMBER 테이블에 존재해서 MEMBER를 update 해줘야 됨
+            team.getMembers().add(member);
+
             em.persist(team);
-
-            Member member = new Member();
-            member.setName("Member1");
-            member.chagneTeam(team); // 연관관계 주인에게 값 설정
-            em.persist(member);
-
-//            team.getMembers().add(member);
-//
-//            em.flush();
-//            em.clear();
-
-            Team findTeam = em.find(Team.class, team.getId());
-            List<Member> members = findTeam.getMembers();
-
-            System.out.println("====================");
-            for (Member m : members) {
-                System.out.println("m.getName() = " + m.getName());
-            }
-            System.out.println("====================");
 
             tx.commit();
         } catch (Exception e) {

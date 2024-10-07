@@ -14,9 +14,8 @@ public class Member {
     @Column(name = "USERNAME")
     private String name;
 
-    // 회원 N : 팀 1
     @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 만들어줌
     private Team team;
 
     public Member() {
@@ -38,12 +37,12 @@ public class Member {
         this.name = name;
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
-    public void chagneTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
-    }
+//    public Team getTeam() {
+//        return team;
+//    }
+//
+//    public void chagneTeam(Team team) {
+//        this.team = team;
+//        team.getMembers().add(this);
+//    }
 }
