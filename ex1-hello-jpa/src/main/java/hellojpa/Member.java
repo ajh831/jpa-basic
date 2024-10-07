@@ -18,6 +18,10 @@ public class Member {
     @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 만들어줌
     private Team team;
 
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
     public Member() {
     }
 
