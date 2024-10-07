@@ -1,9 +1,9 @@
 package jpabook.jpashop.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -16,6 +16,11 @@ public class Member {
     private String city;
     private String street;
     private String zipcode;
+
+/*    실제로 아래의 양방향 코드는 사용하지 않는 것이 좋음
+    필요한 경우 멤버를 조회하고 오더를 따로 조회하는 것이 맞음!!*/
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -55,5 +60,13 @@ public class Member {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }
