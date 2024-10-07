@@ -55,17 +55,11 @@ public class JpaMain {
 
             // 조회
             Member findMember = em.find(Member.class, member.getId());
-            // 참조를 사용해서 연관관계 조회
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam = " + findTeam.getName());
+            List<Member> members = findMember.getTeam().getMembers(); // 양방향 연관 관계  역방향 조회
 
-            // 수정
-            // 팀명 변경
-            Team newTeam = em.find(Team.class, team.getId());
-            newTeam.setName("TeamB");
-            // em.persist(newTeam); 안해도 됨 em.find를 통해 데이터를 찾아 왔기 때문에 새로운 객체를 만든 것이 아니므로 할 필요 없음
-
-            findMember.setTeam(newTeam);
+            for (Member m : members) {
+                System.out.println("userName = " + m.getName());
+            }
 
             tx.commit();
         } catch (Exception e) {
