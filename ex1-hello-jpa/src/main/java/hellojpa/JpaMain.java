@@ -20,45 +20,52 @@ public class JpaMain {
 
         /* code 작성 */
         try {
+/*
+            // 팀 저장
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-            Member member1 = new Member();
-            member1.setUsername("A");
+            // 회원 저장
+            Member member = new Member();
+            member.setName("Member1");
+            member.setTeamId(team.getId());
+            em.persist(member);
 
-            Member member2 = new Member();
-            member2.setUsername("B");
+            // 조회
+            Member findMember = em.find(Member.class, member.getId());
 
-            Member member3 = new Member();
-            member3.setUsername("C");
+            Long findTeamId = findMember.getTeamId();
+            // 연관관계가 없음
+            Team findTeam = em.find(Team.class, findTeamId);
+*/
+            // 팀 저장
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-            Member member4 = new Member();
-            member4.setUsername("D");
+            // 회원 저장
+            Member member = new Member();
+            member.setName("Member1");
+            member.setTeam(team); // 단방향 연관관계 설정, 참조 저장
+            em.persist(member);
 
-            System.out.println("====================");
+            em.flush();
+            em.clear();
 
-            /*
-                DB SEQ = 1  |   1
-                DB SEQ = 51 |   2
-                DB SEQ = 51 |   3
-            */
+            // 조회
+            Member findMember = em.find(Member.class, member.getId());
+            // 참조를 사용해서 연관관계 조회
+            Team findTeam = findMember.getTeam();
+            System.out.println("findTeam = " + findTeam.getName());
 
-            System.out.println(" = member1 persist 전 = ");
-            em.persist(member1); // 1, 51
-            System.out.println(" = member1 persist 후 = ");
-            System.out.println(" = member2 persist 전 = ");
-            em.persist(member2); // MEMORY 호출
-            System.out.println(" = member2 persist 후 = ");
-            System.out.println(" = member3 persist 전 = ");
-            em.persist(member3); // MEMORY 호출
-            System.out.println(" = member3 persist 후 = ");
-            System.out.println(" = member4 persist 전 = ");
-            em.persist(member4); // MEMORY 호출
-            System.out.println(" = member4 persist 후 = ");
+            // 수정
+            // 팀명 변경
+            Team newTeam = em.find(Team.class, team.getId());
+            newTeam.setName("TeamB");
+            // em.persist(newTeam); 안해도 됨 em.find를 통해 데이터를 찾아 왔기 때문에 새로운 객체를 만든 것이 아니므로 할 필요 없음
 
-            System.out.println("\nmember1.id = " + member1.getId());
-            System.out.println("member2.id = " + member2.getId());
-            System.out.println("member3.id = " + member3.getId());
-            System.out.println("member4.id = " + member4.getId());
-            System.out.println("====================");
+            findMember.setTeam(newTeam);
 
             tx.commit();
         } catch (Exception e) {
