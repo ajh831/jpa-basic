@@ -39,27 +39,30 @@ public class JpaMain {
             // 연관관계가 없음
             Team findTeam = em.find(Team.class, findTeamId);
 */
-            // 팀 저장
+            // 저장
             Team team = new Team();
             team.setName("TeamA");
+
             em.persist(team);
 
-            // 회원 저장
             Member member = new Member();
             member.setName("Member1");
-            member.setTeam(team); // 단방향 연관관계 설정, 참조 저장
+            member.chagneTeam(team); // 연관관계 주인에게 값 설정
             em.persist(member);
 
-            em.flush();
-            em.clear();
+//            team.getMembers().add(member);
+//
+//            em.flush();
+//            em.clear();
 
-            // 조회
-            Member findMember = em.find(Member.class, member.getId());
-            List<Member> members = findMember.getTeam().getMembers(); // 양방향 연관 관계  역방향 조회
+            Team findTeam = em.find(Team.class, team.getId());
+            List<Member> members = findTeam.getMembers();
 
+            System.out.println("====================");
             for (Member m : members) {
-                System.out.println("userName = " + m.getName());
+                System.out.println("m.getName() = " + m.getName());
             }
+            System.out.println("====================");
 
             tx.commit();
         } catch (Exception e) {

@@ -14,21 +14,10 @@ public class Member {
     @Column(name = "USERNAME")
     private String name;
 
-//    @Column(name = "TEAM_ID")
-//    private Long teamId;
-
     // 회원 N : 팀 1
     @ManyToOne
     @JoinColumn(name = "TEAM_ID")
     private Team team;
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
 
     public Member() {
     }
@@ -49,11 +38,12 @@ public class Member {
         this.name = name;
     }
 
-//    public Long getTeamId() {
-//        return teamId;
-//    }
-//
-//    public void setTeamId(Long teamId) {
-//        this.teamId = teamId;
-//    }
+    public Team getTeam() {
+        return team;
+    }
+
+    public void chagneTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
+    }
 }
