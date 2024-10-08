@@ -4,9 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
+import jpabook.jpashop.domain.*;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -22,18 +20,23 @@ public class JpaMain {
         /* code 작성 */
         try {
 
-            Order order = new Order();
-            em.persist(order);
+            Movie movie = new Movie();
 
-            // 방법 1. 양방향 연관관계인 경우
-            order.addOrderItem(new OrderItem()); // 연관관계 편의 메서드 사용
+            movie.setDirector("director");
+            movie.setActor("actor");
+            movie.setName("바람과 함께 사라지다");
+            movie.setPrice(10000);
 
-/*
-            // 방법 2. 단방향 연관관계인 경우
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            em.persist(orderItem);
-*/
+            em.persist(movie);
+
+            em.flush();
+            em.clear();
+
+//            Movie findMovie = em.find(Movie.class, movie.getId());
+//            System.out.println("findMovie = " + findMovie);
+
+            Item findItem = em.find(Item.class, movie.getId());
+            System.out.println("findItem = " + findItem);
 
             tx.commit();
         } catch (Exception e) {
