@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jpabook.jpashop.converter.DeliveryStatusConverter;
 
 @Entity
-public class Delivery {
+public class Delivery extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "DELEIVERY_ID")
