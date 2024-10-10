@@ -23,28 +23,23 @@ public class JpaMain {
 
         /* code 작성 */
         try {
-            Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
+            Child child1 = new Child();
+            Child child2 = new Child();
 
-            Member member1 = new Member();
-            member1.setName("member1");
-            member1.chagneTeam(team);
-            em.persist(member1);
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(parent);
+            em.persist(child1);
+            em.persist(child2);
 
             em.flush();
-            em.clear(); // 준영속상태로 만듦
+            em.clear();
 
-            List<Member> members = em.createQuery("select m from Member m", Member.class)
-                    .getResultList();
-
-
-//            Member findMember = em.find(Member.class, member1.getId());
-//            System.out.println("findMember = " + findMember.getTeam().getClass()); // Proxy
-//
-//            System.out.println("====================");
-//            findMember.getTeam().getName(); // proxy 초기화 및 team 정보를 DB에서 가지고 옴
-//            System.out.println("====================");
+            Parent findParent = em.find(Parent.class, parent.getId());
+//            findParent.getChildList().remove(0);
+            em.remove(findParent);
 
             tx.commit();
         } catch (Exception e) {
