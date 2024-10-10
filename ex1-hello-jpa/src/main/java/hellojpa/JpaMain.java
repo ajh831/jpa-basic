@@ -4,8 +4,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import org.hibernate.Hibernate;
 
+import javax.swing.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -20,20 +23,33 @@ public class JpaMain {
 
         /* code 작성 */
         try {
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
 
-            Member member = new Member();
-            member.setName("user1");
-            member.setCreatedBy("kim");
-            member.setCreatedDate(LocalDateTime.now());
-
-            em.persist(member);
+            Member member1 = new Member();
+            member1.setName("member1");
+            member1.chagneTeam(team);
+            em.persist(member1);
 
             em.flush();
-            em.clear();
+            em.clear(); // 준영속상태로 만듦
+
+            List<Member> members = em.createQuery("select m from Member m", Member.class)
+                    .getResultList();
+
+
+//            Member findMember = em.find(Member.class, member1.getId());
+//            System.out.println("findMember = " + findMember.getTeam().getClass()); // Proxy
+//
+//            System.out.println("====================");
+//            findMember.getTeam().getName(); // proxy 초기화 및 team 정보를 DB에서 가지고 옴
+//            System.out.println("====================");
 
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
+            e.printStackTrace();
         } finally {
             em.close();
         }

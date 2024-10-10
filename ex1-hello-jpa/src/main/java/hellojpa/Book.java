@@ -2,6 +2,8 @@ package hellojpa;
 
 import jakarta.persistence.Entity;
 
+import java.io.Serializable;
+
 @Entity
 public class Book extends Item {
     private String author;
