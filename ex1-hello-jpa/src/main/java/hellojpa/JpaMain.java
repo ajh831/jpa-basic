@@ -23,23 +23,15 @@ public class JpaMain {
 
         /* code 작성 */
         try {
-            Child child1 = new Child();
-            Child child2 = new Child();
+            Address address = new Address("city", "street", "10000");
 
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(address);
+            em.persist(member);
 
-            em.persist(parent);
-            em.persist(child1);
-            em.persist(child2);
-
-            em.flush();
-            em.clear();
-
-            Parent findParent = em.find(Parent.class, parent.getId());
-//            findParent.getChildList().remove(0);
-            em.remove(findParent);
+            Address newAddress = new Address("NewCity", address.getCity(), address.getStreet()));
+            member.setHomeAddress(newAddress);
 
             tx.commit();
         } catch (Exception e) {
