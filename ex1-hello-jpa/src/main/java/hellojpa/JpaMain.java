@@ -30,7 +30,7 @@ public class JpaMain {
             member.setHomeAddress(address);
             em.persist(member);
 
-            Address newAddress = new Address("NewCity", address.getCity(), address.getStreet()));
+            Address newAddress = new Address("NewCity", address.getCity(), address.getStreet());
             member.setHomeAddress(newAddress);
 
             tx.commit();
