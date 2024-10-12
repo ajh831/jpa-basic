@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import javax.swing.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -23,15 +24,45 @@ public class JpaMain {
 
         /* code 작성 */
         try {
-            Address address = new Address("city", "street", "10000");
-
             Member member = new Member();
             member.setUsername("member1");
-            member.setHomeAddress(address);
+            member.setHomeAddress(new Address("homeCity", "street", "10000"));
+
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피자");
+
+            member.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
+            member.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
+
             em.persist(member);
 
-            Address newAddress = new Address("NewCity", address.getCity(), address.getStreet());
-            member.setHomeAddress(newAddress);
+            em.flush();
+            em.clear();
+
+            System.out.println("================ START ================");
+            Member findMember = em.find(Member.class, member.getId());
+
+/*            // homeCity -> newCity
+            *//*
+               findMember.getHomeAddress().setCity("newCity");
+               이렇게 값을 수정하면 안됨 -> 사이드 이펙트 발생
+               값 타입은 immutable해야 됨
+            *//*
+            Address oldAddress = findMember.getHomeAddress();
+
+            // 새로운 인스턴스로 교체해야 됨
+            findMember.setHomeAddress(new Address("newCity", oldAddress.getStreet(), oldAddress.getZipcode()));
+
+            // 값 타입 컬렉션 수정
+            // 치킨 -> 한식
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");*/
+
+            // old1 -> newCity1
+            // 기본적으로 컬렉션들은 대상을 찾을 때 equals를 사용하기 때문에 equals와 hashcode가 재정의 되어 있어야한다.
+            findMember.getAddressHistory().remove(new AddressEntity("old1", "street", "10000"));
+            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street", "10000"));
 
             tx.commit();
         } catch (Exception e) {
