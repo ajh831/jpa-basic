@@ -59,16 +59,35 @@ public class JpaMain {
 
             em.persist(member4);
 
-            em.flush();
+            // FLUSH 자동 호출
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
+
+            System.out.println("resultCount = " + resultCount);
+
+            // 문제점 : 영속성 컨텍스트에는 반영되지 않았음
+            System.out.println("==================== BEFORE ====================");
+            System.out.println("member1.getAget() = " + member1.getAge());
+            System.out.println("member2.getAget() = " + member2.getAge());
+            System.out.println("member3.getAget() = " + member3.getAge());
+            System.out.println("member4.getAget() = " + member4.getAge());
+
+            // 해결 : em.clear();로 영속성 컨텍스트 초기화 수행이 필요
+            System.out.println("==================== AFTER ====================");
+
             em.clear();
 
-            List<Member> resultList = em.createNamedQuery("Member.findByUsername")
-                    .setParameter("username", "회원1")
-                    .getResultList();
+            Member findMember1 = em.find(Member.class, member1.getId());
+            Member findMember2 = em.find(Member.class, member2.getId());
+            Member findMember3 = em.find(Member.class, member3.getId());
+            Member findMember4 = em.find(Member.class, member4.getId());
 
-            for (Member member : resultList) {
-                System.out.println("member = " + member);
-            }
+
+            System.out.println("findMember1.getAget() = " + findMember1.getAge());
+            System.out.println("findMember2.getAget() = " + findMember2.getAge());
+            System.out.println("findMember3.getAget() = " + findMember3.getAge());
+            System.out.println("findMember4.getAget() = " + findMember4.getAge());
+
 
             tx.commit();
         } catch (Exception e) {
