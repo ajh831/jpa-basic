@@ -62,35 +62,13 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-/*//            String query = "select m from Member m join fetch m.team";
-            String query = "select t from Team t join fetch t.members";
-            List<Team> members = em.createQuery(query, Team.class)
+            String query = "select m from Member m where m.team.id = :teamId";
+            List<Member> findMember = em.createQuery(query, Member.class)
+                    .setParameter("teamId", teamA.getId())
                     .getResultList();
 
-            for (Team team : members) {
-//                System.out.println("member = "+ member);
-                System.out.println("team = "+ team.getName() + " | " + team.getMembers().size() + "명");
-                // 회원1, 팀A(SQL)
-                // 회원2, 팀A(1차캐시)
-                // 회원3, 팀B(SQL)
-                // 회원4, 팀X(NullPointerException)
-
-                // 회원 100명 -> N(첫번째 쿼리로 얻은 결과만큼 N번) + 1(회원을 가지고 오기위해서 날린 쿼리)
-            }*/
-
-            String jpql = "select t from Team t";
-            List<Team> result = em.createQuery(jpql, Team.class)
-                    .setFirstResult(0)
-                    .setMaxResults(2)
-                    .getResultList();
-
-            System.out.println("result = " + result.size());
-
-            for(Team team : result) {
-                System.out.println("team = " + team.getName() + " | members = " + team.getMembers().size());
-                for (Member member : team.getMembers()) {
-                    System.out.println("-> member = " + member);
-                }
+            for (Member member : findMember) {
+                System.out.println("member = " + member);
             }
 
             tx.commit();
