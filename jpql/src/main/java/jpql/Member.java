@@ -9,12 +9,14 @@ public class Member {
     private Long id;
 
     private String username;
+    private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
-    private int age;
+    @Enumerated(EnumType.STRING)
+    private MemberType type;
 
     // 연관관계 편의 메서드
     public void changeTeam(Team team) {
@@ -52,6 +54,14 @@ public class Member {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public MemberType getType() {
+        return type;
+    }
+
+    public void setType(MemberType type) {
+        this.type = type;
     }
 
     @Override
